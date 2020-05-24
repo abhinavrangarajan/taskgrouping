@@ -5,6 +5,9 @@ import torch.utils.model_zoo as model_zoo
 from torch.nn import init
 import torch
 
+import numpy as np
+from PIL import Image
+
 from .ozan_rep_fun import ozan_rep_function,trevor_rep_function,OzanRepFunction,TrevorRepFunction
 
 __all__ = ['bugnet_taskonomy']
@@ -76,8 +79,8 @@ class BugNet(nn.Module):
         
         self.decoders = nn.ModuleList(self.task_to_decoder.values())
 
-    def forward(self, input):
-        rep = self.encoder(input)
+    def forward(self, input_img):
+        rep = self.encoder(input_img)
         outputs={'rep':rep}
 
         # rep = ozan_rep_function(rep)
@@ -85,7 +88,16 @@ class BugNet(nn.Module):
 
         for i, (task,decoder) in enumerate(zip(self.task_to_decoder.keys(), self.decoders)):
             outputs[task]=decoder(rep)
-        
+
+        print(input_img.cpu().detach().numpy())
+
+        img = Image.fromarray(input_img[0].cpu().detach().numpy(), "RGB")
+        img.save("input_img.png")
+        img.show()
+        input()
+        exit(1)
+
+
         return outputs
 
 
