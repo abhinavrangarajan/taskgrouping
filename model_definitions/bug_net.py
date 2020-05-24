@@ -88,12 +88,7 @@ class BugNet(nn.Module):
 
         for i, (task,decoder) in enumerate(zip(self.task_to_decoder.keys(), self.decoders)):
             outputs[task]=decoder(rep)
-        
-        img_np = input_img[0].cpu().detach().numpy()
-        img_np = np.ascontiguousarray(img_np.transpose(1,2,0))
-        img = Image.fromarray(img_np, "RGB")
-        img.save("input_img.png")
-        
+
         for task, output in outputs.items():
             img_np = output[0].cpu().detach().numpy()
             img_np = np.ascontiguousarray(img_np.transpose(1,2,0))
@@ -101,7 +96,7 @@ class BugNet(nn.Module):
                 img = Image.fromarray(img_np, "RGB")
             else:
                 img = Image.fromarray(img_np.squeeze(axis = 2), "P")
-            img.save(task + ".png")
+            img.save("images/" + task + ".png")
             print(max(img_np.flatten()))
 
         return outputs
