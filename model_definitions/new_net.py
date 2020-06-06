@@ -44,6 +44,8 @@ class A2D2Encoder(nn.Module):
         self.final_channels = 64
         self.num_blocks = 4
         self.hw_final = 256 // (2**(self.num_blocks+1))
+        self.encoder_hw = 8
+        self.fc_encoder = 3*self.encoder_hw*self.encoder_hw
 
         self.conv1 = nn.Conv2d(3,3,kernel_size= 5,padding = 2)
         self.conv2 = nn.Conv2d(3,8,kernel_size= 5,padding = 2)
@@ -54,8 +56,8 @@ class A2D2Encoder(nn.Module):
         # Image size: 256 -> 128 -> 64 -> 32 -> 8 : 256//(2**5)
 
 
-        self.fc1 = nn.Linear(self.final_channels*8*8, 3*8*8)
-        self.fc2 = nn.Linear(3*8*8, 3*8*8)
+        self.fc1 = nn.Linear(self.final_channels*self.hw_final*self.hw_final, self.fc_encoder)
+        self.fc2 = nn.Linear(self.fc_encoder, self.fc_encoder)
 
     def forward(self,x):
         x = self.conv1(x)
@@ -66,12 +68,12 @@ class A2D2Encoder(nn.Module):
         x = self.block3(x)
         x = self.block4(x)
 
-        x = x.view(-1,self.final_channels*8*8)
+        x = x.view(-1,self.final_channels*self.hw_final*self.hw_final)
         x = self.fc1(x)
         x = nn.ReLU()(x)
         x = self.fc2(x)
         x = nn.ReLU()(x)
-        x = x.view(-1,3,8,8)
+        x = x.view(-1,3,self.encoder_hw,self.encoder_hw)
 
         return x
 
