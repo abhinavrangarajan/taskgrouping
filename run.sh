@@ -29,6 +29,7 @@ command+="--workers $number_of_workers "
 command+="--experiment_name $experiment_name "
 command+="--batch-size $batch_size "
 command+="--epochs $epochs "
+command+="--wd 0.01 "
 if [ $partition -ge 1 ] 
 then
 	command+="--partition "
@@ -36,6 +37,7 @@ then
 fi
 
 command+="-tm $train_models "
+# command+="--resume test_run/dry_run_resnet18_taskonomy_np_dnkts_checkpoint.pth.tar "
 
 # Run command string
 echo "Running command: $command"
