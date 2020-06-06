@@ -3,10 +3,9 @@ import sys
 import random
 import copy
 
-N = int(sys.argv[1])
+N = int(sys.argv[2])
 
-task_folder = os.path.join(os.getcwd(), "../taskonomy_full_dataset/rgb/")
-
+task_folder = sys.argv[1]
 names = []
 for building in os.listdir(task_folder):
     if os.path.isdir(task_folder + building):
