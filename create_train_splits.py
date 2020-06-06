@@ -51,11 +51,30 @@ while tot < 5*N and num < num_buildings:
 
 print("Created 5N training dataset with {} images (from {} buildings).".format(tot, num))
 
+
+# Create the val split
+if num == num_buildings:
+    print("ERROR rerun the script.")
+    sys.exit(1)
+
+possible_buildings = []
+for i in range(num_buildings):
+    if names[i][0] not in train_dataset and names[i][0] not in train5_dataset:
+        possible_buildings.append(i)
+
+val = random.choice(possible_buildings)
+val_building = names[val][0]
+
+
 # Write now these to file
 with open("trainN_models.txt", "w") as f:
     f.write("\n".join(train_dataset))
 
 with open("train5N_models.txt", "w") as f:
     f.write("\n".join(train5_dataset))
+
+with open("val_models.txt", "w") as f:
+    f.write(val_building)
+
 
 print("\nN dataset has {} labels. 5N dataset has {} labels.".format(tot0, tot))

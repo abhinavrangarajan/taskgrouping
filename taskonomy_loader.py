@@ -100,8 +100,18 @@ class TaskonomyLoader(data.Dataset):
                 im = self.to_tensor(im)
 
         return im
-
+    
     def __getitem__(self, index):
+        try:
+            #raise Exception("YOLO")
+            return self.__get_item_inner(index)
+        except:
+            print("Unrec. image at {}".format(index))
+            #print(self.records[index])
+            #print("Unrecognalizable image: {}".format(self.records[index]["rgb"]))
+            return self.__getitem__((index + 1) % len(self))
+    
+    def __get_item_inner(self, index):
         """
         Args:
             index (int): Index
@@ -114,7 +124,7 @@ class TaskonomyLoader(data.Dataset):
         ims = {}
         ys = {}
         mask = None
-
+        
         for i in self.label_set:
 
             file_name=self.records[index][i]
