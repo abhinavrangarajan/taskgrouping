@@ -77,4 +77,4 @@ with open("val_models.txt", "w") as f:
     f.write(val_building)
 
 
-print("\nN dataset has {} labels. 5N dataset has {} labels.".format(tot0, tot))
+print("\nN dataset has {} labels. 5N dataset has {} labels.".format(5*tot0, tot))
