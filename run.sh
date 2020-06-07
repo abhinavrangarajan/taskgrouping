@@ -12,12 +12,12 @@ model_name="a2d2net_taskonomy"
 #model_name="resnet18_taskonomy"
 #model_name="bugnet_taskonomy"
 tasks_to_train_on="dnkts"
-model_dir="res_6k_5n/"
+model_dir="a2d2_6k_5n/"
 mkdir $model_dir
 number_of_workers="1"
 experiment_name="dry_run"
 batch_size="20" # 5 is good for xception with 5 tasks.
-epochs="20"
+epochs="30"
 partition=1 # 5n is 1.
 
 # Compile command string
@@ -32,7 +32,6 @@ command+="--workers $number_of_workers "
 command+="--experiment_name $experiment_name "
 command+="--batch-size $batch_size "
 command+="--epochs $epochs "
-command+="--wd 0.01 "
 if [ $partition -ge 1 ] 
 then
 	command+="--partition "

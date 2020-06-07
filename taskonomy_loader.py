@@ -106,7 +106,8 @@ class TaskonomyLoader(data.Dataset):
             #raise Exception("YOLO")
             return self.__get_item_inner(index)
         except:
-            print("Unrec. image at {}".format(index))
+            with open("Exceptions_{}.txt".format(len(self)), "a+") as f:
+                f.write("Unrec. image at {}".format(index))
             #print(self.records[index])
             #print("Unrecognalizable image: {}".format(self.records[index]["rgb"]))
             return self.__getitem__((index + 1) % len(self))
