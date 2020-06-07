@@ -210,7 +210,8 @@ def main(args):
 
     print('Virtual batch size =', args.batch_size*args.virtual_batch_multiplier)
 
-    optimizer = torch.optim.SGD(model.parameters(), args.lr,momentum=args.momentum,weight_decay=args.weight_decay)
+    #optimizer = torch.optim.SGD(model.parameters(), args.lr,momentum=args.momentum,weight_decay=args.weight_decay)
+    optimizer = torch.optim.Adam(model.parameters(), args.lr,weight_decay=args.weight_decay)
     
     #tested with adamW. Poor results observed
     #optimizer = adamW.AdamW(model.parameters(),lr= args.lr,weight_decay=args.weight_decay,eps=1e-3)
