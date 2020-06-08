@@ -187,7 +187,11 @@ def main(args):
         if os.path.isfile(args.resume):
             print("=> loading checkpoint '{}'".format(args.resume))
             checkpoint = torch.load(args.resume, map_location = lambda storage, loc: storage)
-            model.load_state_dict(checkpoint['state_dict'])
+            # print("Loading State Dict: ", checkpoint['state_dict'].keys())
+            checkpoint_state_dict = checkpoint['state_dict']
+            rm_module_name = lambda s: s if 'module.' not in s else s[7:]
+            checkpoint_state_dict = {rm_module_name(k): v for k,v in checkpoint_state_dict.items()}
+            model.load_state_dict(checkpoint_state_dict)
             print("=> loaded checkpoint '{}' (epoch {})"
                   .format(args.resume, checkpoint['epoch']))
         else:
@@ -400,7 +404,7 @@ class Trainer:
         # self.fp16=args.fp16
         self.code_archive=self.get_code_archive()
         if checkpoint:
-            self.progress_table = [[x] for x in checkpoint['progress_table']]
+            self.progress_table = checkpoint['progress_table'] # [[x] for x in checkpoint['progress_table']]
             self.start_epoch = checkpoint['epoch']+1
             self.best_loss = checkpoint['best_loss']
             self.stats = checkpoint['stats']
@@ -599,7 +603,7 @@ class Trainer:
             
             batch_num+=1
             current_learning_rate= get_average_learning_rate(self.optimizer)
-            if True or num_data_points == batch_num:
+            if (batch_num % 50 == 0) or (num_data_points == batch_num):
 
                 to_print = {}
                 to_print['ep']= ('{0}:').format(self.epoch)
@@ -706,7 +710,7 @@ class Trainer:
                         average_meters[name].update(value)
                 eta = ((time.time()-epoch_start_time2)/(batch_num+.2))*(len(self.val_loader)-batch_num)
 
-                if True or i == len(self.val_loader) -1:
+                if (i % 50 == 0) or (i == len(self.val_loader) -1):
                     to_print = {}
                     to_print['#/{0}'.format(num_data_points)]= ('{0}').format(batch_num)
                     to_print['eta']= ('{0}').format(time.strftime("%H:%M:%S", time.gmtime(int(eta))))
